@@ -432,6 +432,120 @@ h1 {
     box-shadow: 0 0 0 4px rgba(199, 159, 158, 0.15);
 }
 
+/* Quantity Selector */
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 2px solid #E5E0DC;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    width: fit-content;
+}
+
+.qty-btn {
+    background: #f7f4f2;
+    border: none;
+    width: 52px;
+    height: 52px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--mocha-mousse);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.qty-btn:hover {
+    background: var(--muted-rose);
+    color: white;
+}
+
+.qty-value {
+    min-width: 56px;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+.qty-total {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: var(--mocha-mousse);
+}
+
+.qty-total strong {
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.form-error {
+    color: #E63946;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-align: center;
+    background: rgba(230, 57, 70, 0.08);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* Success Box */
+.success-box {
+    text-align: center;
+    padding: calc(var(--spacing-base) * 5) calc(var(--spacing-base) * 3) !important;
+}
+
+.success-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    animation: pop-in 0.4s ease;
+}
+
+@keyframes pop-in {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.success-title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: var(--mocha-mousse);
+    margin-bottom: 12px;
+}
+
+.success-message {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.success-sub {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    line-height: 1.7;
+}
+
+.success-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(154, 123, 109, 0.15);
+    font-size: 0.95rem;
+    color: var(--text-main);
+    font-weight: 600;
+}
+
 /* FAQ Accordion */
 .faq-section {
     padding: calc(var(--spacing-base) * 8) 0;

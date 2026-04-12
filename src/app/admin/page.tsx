@@ -17,6 +17,7 @@ interface Lead {
   full_name: string;
   phone: string;
   city: string;
+  quantity: number;
   status: LeadStatus;
   created_at: string;
   campaign_slug: string;
@@ -82,6 +83,11 @@ function LeadCard({
           <MapPin className="w-3.5 h-3.5 text-slate-400" />
           <span>{lead.city}</span>
         </div>
+        {lead.quantity > 1 && (
+          <div className="mt-2 inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-xs font-bold px-2 py-1 rounded-lg border border-amber-200">
+            🛍️ الكمية: {lead.quantity}
+          </div>
+        )}
       </div>
     </div>
   );

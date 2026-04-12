@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import OrderForm from "./OrderForm";
 
 // Forces Next.js to fetch dynamically so updating the DB updates the site instantly
 export const revalidate = 0;
@@ -148,7 +149,7 @@ export default async function HomePage() {
                 </div>
               </div>
               <div className="review-content">
-                <p>"المنتج كيحمق فالحقيقة حسن من تصويرة، واعر بزاف ومريح. شكرا جزيلا!"</p>
+                <p>&quot;المنتج كيحمق فالحقيقة حسن من تصويرة، واعر بزاف ومريح. شكرا جزيلا!&quot;</p>
               </div>
             </div>
             <div className="review-card">
@@ -160,7 +161,7 @@ export default async function HomePage() {
                 </div>
               </div>
               <div className="review-content">
-                <p>"وصلني ليوم، جا روعة وممتاز فالاستعمال. التوصيل كان سريع والتعامل راقي."</p>
+                <p>&quot;وصلني ليوم، جا روعة وممتاز فالاستعمال. التوصيل كان سريع والتعامل راقي.&quot;</p>
               </div>
             </div>
             <div className="review-card">
@@ -172,7 +173,7 @@ export default async function HomePage() {
                 </div>
               </div>
               <div className="review-content">
-                <p>"روعة روعة! الجودة ممتازة والكاليتي كتبان من أول شوفة. أكيد غنبقى نتعامل معاكم."</p>
+                <p>&quot;روعة روعة! الجودة ممتازة والكاليتي كتبان من أول شوفة. أكيد غنبقى نتعامل معاكم.&quot;</p>
               </div>
             </div>
           </div>
@@ -183,46 +184,7 @@ export default async function HomePage() {
       <section id="order" className="form-section">
         <div className="container">
           <h2 className="section-title">احجزي قطعتك الآن! الدفع عند الاستلام</h2>
-          <div className="checkout-box">
-            <form 
-              action={async (formData) => {
-                "use server";
-                const name = formData.get("name");
-                const phone = formData.get("phone");
-                const city = formData.get("city");
-                if (!name || !phone || !city) return;
-
-                await supabase.from("leads").insert({
-                  campaign_slug: "default",
-                  full_name: name,
-                  phone: phone,
-                  city: city
-                });
-              }}
-            >
-              <div className="form-group">
-                <label className="form-label" htmlFor="name">الاسم الكامل</label>
-                <input className="form-input" type="text" id="name" name="name" placeholder="أدخلي اسمك الكامل" required />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="phone">رقم الهاتف للاتصال بك</label>
-                <input className="form-input" type="tel" id="phone" name="phone" placeholder="06XX-XXXXXX" dir="ltr" inputMode="numeric" required />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="city">المدينة</label>
-                <input className="form-input" type="text" id="city" name="city" placeholder="مدينة التوصيل" required />
-              </div>
-              
-              <button type="submit" className="btn-primary">
-                أكدي الطلب الآن ({price} درهم)
-              </button>
-              
-              <div className="secure-payment-icons">
-                <span>🔒</span>
-                <span style={{fontSize: '0.9rem', alignSelf: 'center'}}>معلوماتك آمنة 100%. الدفع يتم بعد استلامك للمنتج.</span>
-              </div>
-            </form>
-          </div>
+          <OrderForm price={price} />
         </div>
       </section>
 
@@ -243,7 +205,7 @@ export default async function HomePage() {
               <span>كيف يمكنني الدفع؟</span>
             </summary>
             <div className="faq-answer">
-              نحن نوفر خدمة "الدفع عند الاستلام". لن تدفعي أي شيء حتى يصلك المنتج إلى باب منزلك وتتأكدي منه.
+              نحن نوفر خدمة &quot;الدفع عند الاستلام&quot;. لن تدفعي أي شيء حتى يصلك المنتج إلى باب منزلك وتتأكدي منه.
             </div>
           </details>
           <details className="faq-item">
