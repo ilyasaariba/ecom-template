@@ -1,9 +1,17 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "متجر ميراشوب | Boutique",
   description: "عروض مذهلة",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#9A7B6D",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
