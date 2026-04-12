@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Loader2, Save, Image as ImageIcon, Settings, CheckCircle2, Lock, Unlock, LogOut, Ghost } from "lucide-react";
+import { Loader2, Save, Image as ImageIcon, Settings, CheckCircle2, Lock, Unlock, LogOut, UploadCloud, X } from "lucide-react";
 
 const SECRET_PASSWORD = "aariba29012007";
 
@@ -14,14 +14,16 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [price, setPrice] = useState("");
   const [oldPrice, setOldPrice] = useState("");
   const [scarcity, setScarcity] = useState("");
+  
   const [mainImageUrl, setMainImageUrl] = useState("");
-  const [snapPixel, setSnapPixel] = useState("");
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
 
   useEffect(() => {
     const auth = localStorage.getItem("admin_auth");
@@ -65,7 +67,7 @@ export default function AdminPage() {
       setOldPrice(data.old_price?.toString() || "");
       setScarcity(data.scarcity_text || "");
       setMainImageUrl(data.main_image_url || "");
-      setSnapPixel(data.snap_pixel_id || "");
+      setGalleryImages(data.gallery_images || []);
     }
     setLoading(false);
   };
@@ -82,7 +84,7 @@ export default function AdminPage() {
         old_price: oldPrice ? parseFloat(oldPrice) : null,
         scarcity_text: scarcity,
         main_image_url: mainImageUrl,
-        snap_pixel_id: snapPixel,
+        gallery_images: galleryImages
       })
       .eq("slug", "default");
 
@@ -90,6 +92,50 @@ export default function AdminPage() {
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
+
+  const uploadFileToSupabase = async (file: File): Promise<string | null> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = \`\${Date.now()}-\${Math.random().toString(36).substring(7)}.\${fileExt}\`;
+    
+    setUploadingImage(true);
+    const { error: uploadError } = await supabase.storage
+      .from("product-images")
+      .upload(fileName, file);
+
+    setUploadingImage(false);
+    
+    if (uploadError) {
+      alert("حدث خطأ أثناء رفع الصورة: " + uploadError.message);
+      return null;
+    }
+
+    const { data } = supabase.storage.from("product-images").getPublicUrl(fileName);
+    return data.publicUrl;
+  };
+
+  const handleMainImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    const url = await uploadFileToSupabase(file);
+    if (url) setMainImageUrl(url);
+  };
+
+  const handleGalleryImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const files = Array.from(e.target.files);
+    
+    for (const file of files) {
+      const url = await uploadFileToSupabase(file);
+      if (url) {
+        setGalleryImages(prev => [...prev, url]);
+      }
+    }
+  };
+
+  const removeGalleryImage = (indexToRemove: number) => {
+    setGalleryImages(prev => prev.filter((_, idx) => idx !== indexToRemove));
+  };
+
 
   // ─── LOGIN SCREEN ────────────────────────────────────────────────────────
   if (isAuthenticated === false) {
@@ -115,7 +161,7 @@ export default function AdminPage() {
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
                 placeholder="كلمة المرور..."
-                className={`w-full px-5 py-4 bg-white/50 border ${loginError ? 'border-red-400' : 'border-slate-200 focus:border-blue-500'} rounded-xl text-slate-800 placeholder-slate-400 outline-none transition-all focus:ring-4 focus:ring-blue-500/10 font-mono`}
+                className={\`w-full px-5 py-4 bg-white/50 border \${loginError ? 'border-red-400' : 'border-slate-200 focus:border-blue-500'} rounded-xl text-slate-800 placeholder-slate-400 outline-none transition-all focus:ring-4 focus:ring-blue-500/10 font-mono\`}
               />
               {loginError && <p className="text-red-500 text-xs mt-2 text-center font-bold">عذراً، كلمة المرور خاطئة</p>}
             </div>
@@ -155,7 +201,7 @@ export default function AdminPage() {
               لوحة التحكم
               <span className="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full border border-green-200 shadow-sm font-bold">فعّال</span>
             </h1>
-            <p className="text-slate-500 mt-2 text-sm font-medium">قم بإدارة صفحتك وتحديث بيكسل سناب شات من مكان واحد.</p>
+            <p className="text-slate-500 mt-2 text-sm font-medium">إدارة صفحة الهبوط والوسائط (تم دمج Pixel تلقائياً)</p>
           </div>
           <button 
             onClick={handleLogout}
@@ -226,8 +272,15 @@ export default function AdminPage() {
             </div>
           </div>
 
-          {/* SECTION 2: Media */}
-          <div className="bg-white/50 border border-white rounded-3xl p-6 shadow-sm">
+          {/* SECTION 2: Media Management */}
+          <div className="bg-white/50 border border-white rounded-3xl p-6 shadow-sm relative">
+            {uploadingImage && (
+              <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center rounded-3xl">
+                <Loader2 className="w-10 h-10 animate-spin text-purple-600 mb-3" />
+                <span className="font-bold text-slate-800">جاري رفع الصورة...</span>
+              </div>
+            )}
+            
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center shadow-sm">
                 <ImageIcon className="w-5 h-5 text-purple-600" />
@@ -235,44 +288,66 @@ export default function AdminPage() {
               <h2 className="text-xl font-bold text-slate-800">الصور والوسائط</h2>
             </div>
             
-            <div className="flex flex-col sm:flex-row items-center gap-6">
-              <div className="flex-1 w-full">
-                <label className="block text-sm font-bold text-slate-700 mb-2">رابط الصورة الرئيسية</label>
-                <input
-                  type="text" value={mainImageUrl} onChange={(e) => setMainImageUrl(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-white border border-slate-200 focus:border-purple-500 rounded-xl text-slate-800 outline-none transition-all shadow-sm font-mono text-sm focus:ring-4 focus:ring-purple-500/10"
-                  placeholder="https://..."
-                />
-              </div>
-              {mainImageUrl && (
-                <div className="shrink-0 w-24 h-24 bg-white border-2 border-white rounded-2xl overflow-hidden shadow-md">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={mainImageUrl} alt="Preview" className="w-full h-full object-cover" />
+            <div className="space-y-8">
+              {/* Main Image Upload */}
+              <div className="p-5 bg-white border-2 border-dashed border-slate-200 rounded-2xl">
+                <label className="block text-sm font-black text-slate-800 mb-3">الصورة الرئيسية (Hero Image)</label>
+                <div className="flex flex-col sm:flex-row items-start gap-6">
+                  {mainImageUrl ? (
+                    <div className="shrink-0 w-32 h-32 rounded-xl overflow-hidden shadow-md border-2 border-white relative group">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={mainImageUrl} className="w-full h-full object-cover" alt="Main" />
+                      <button type="button" onClick={() => setMainImageUrl("")} className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="shrink-0 w-32 h-32 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-200">
+                      <ImageIcon className="w-8 h-8 text-slate-300" />
+                    </div>
+                  )}
+                  
+                  <div className="flex-1 w-full">
+                    <label className="cursor-pointer flex items-center justify-center gap-2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold py-3 px-6 rounded-xl border border-purple-200 transition-colors w-full sm:w-auto">
+                      <UploadCloud className="w-5 h-5" />
+                      اختر صورة من جهازك
+                      <input type="file" accept="image/*" className="hidden" onChange={handleMainImageChange} />
+                    </label>
+                    <p className="text-xs text-slate-500 mt-3">ملفات الصور المدعومة: JPG, PNG, WEBP. الحجم الأقصى 5MB.</p>
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
-
-          {/* SECTION 3: Snapchat Pixel */}
-          <div className="bg-[#FFFC00]/10 border border-[#FFFC00]/30 rounded-3xl p-6 shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFFC00]/10 rounded-full blur-[40px]" />
-            <div className="flex items-center gap-3 mb-6 relative z-10">
-              <div className="w-10 h-10 rounded-xl bg-[#FFFC00] flex items-center justify-center shadow-sm">
-                <Ghost className="w-5 h-5 text-black" />
               </div>
-              <h2 className="text-xl font-black text-slate-800">بيكسل سناب شات</h2>
-            </div>
-            
-            <div className="relative z-10">
-              <label className="block text-sm font-bold text-slate-700 mb-2">Snap Pixel ID</label>
-              <input
-                type="text" value={snapPixel} onChange={(e) => setSnapPixel(e.target.value)}
-                className="w-full px-5 py-4 bg-white border-2 border-[#FFFC00]/50 focus:border-[#FFFC00] rounded-xl text-slate-800 font-mono text-lg outline-none transition-all shadow-sm focus:ring-4 focus:ring-[#FFFC00]/20"
-                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-              />
-              <p className="text-xs font-bold text-slate-500 mt-3">
-                لن تحتاج لتغيير هذا المعرف مجدداً. البيكسل يقيس كل مبيعاتك تلقائياً!
-              </p>
+
+              {/* Gallery Images Upload */}
+              <div className="p-5 bg-white border-2 border-dashed border-slate-200 rounded-2xl">
+                <div className="flex justify-between items-center mb-4">
+                  <label className="block text-sm font-black text-slate-800">معرض الصور (تظهر أسفل الصورة الرئيسية)</label>
+                  <label className="cursor-pointer flex items-center gap-2 bg-slate-800 hover:bg-black text-white text-xs font-bold py-2 px-4 rounded-lg transition-colors shadow-sm">
+                    <UploadCloud className="w-4 h-4" />
+                    إضافة صور إضافية
+                    <input type="file" accept="image/*" multiple className="hidden" onChange={handleGalleryImagesChange} />
+                  </label>
+                </div>
+                
+                {galleryImages.length > 0 ? (
+                  <div className="flex flex-wrap gap-4 mt-4">
+                    {galleryImages.map((url, idx) => (
+                      <div key={idx} className="relative w-24 h-24 rounded-lg overflow-hidden border-2 border-white shadow-md group">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={url} className="w-full h-full object-cover" alt="Gallery" />
+                        <button type="button" onClick={() => removeGalleryImage(idx)} className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-6 flex flex-col items-center justify-center text-slate-400 bg-slate-50 rounded-xl border border-slate-100">
+                    <ImageIcon className="w-8 h-8 mb-2 opacity-50" />
+                    <span className="text-sm">لا توجد صور إضافية حالياً</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
