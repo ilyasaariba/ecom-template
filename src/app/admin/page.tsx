@@ -95,7 +95,7 @@ export default function AdminPage() {
 
   const uploadFileToSupabase = async (file: File): Promise<string | null> => {
     const fileExt = file.name.split('.').pop();
-    const fileName = \`\${Date.now()}-\${Math.random().toString(36).substring(7)}.\${fileExt}\`;
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
     
     setUploadingImage(true);
     const { error: uploadError } = await supabase.storage
@@ -161,7 +161,7 @@ export default function AdminPage() {
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
                 placeholder="كلمة المرور..."
-                className={\`w-full px-5 py-4 bg-white/50 border \${loginError ? 'border-red-400' : 'border-slate-200 focus:border-blue-500'} rounded-xl text-slate-800 placeholder-slate-400 outline-none transition-all focus:ring-4 focus:ring-blue-500/10 font-mono\`}
+                className={`w-full px-5 py-4 bg-white/50 border ${loginError ? 'border-red-400' : 'border-slate-200 focus:border-blue-500'} rounded-xl text-slate-800 placeholder-slate-400 outline-none transition-all focus:ring-4 focus:ring-blue-500/10 font-mono`}
               />
               {loginError && <p className="text-red-500 text-xs mt-2 text-center font-bold">عذراً، كلمة المرور خاطئة</p>}
             </div>
