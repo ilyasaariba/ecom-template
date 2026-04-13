@@ -68,6 +68,11 @@ export default function GalleryCarousel({ images, productName, discountPct }: Ga
             {idx === 0 && discountPct && (
               <div className="image-discount-badge">-{discountPct}%</div>
             )}
+            {images.length > 1 && (
+              <div className="gallery-counter">
+                {idx + 1} / {images.length}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -89,6 +94,12 @@ export default function GalleryCarousel({ images, productName, discountPct }: Ga
           />
           {activeIndex === 0 && discountPct && (
             <div className="image-discount-badge">-{discountPct}%</div>
+          )}
+          
+          {images.length > 1 && (
+            <div className="gallery-counter">
+              {activeIndex + 1} / {images.length}
+            </div>
           )}
 
           {/* Desktop Left/Right Navigation Arrows on Main Image */}

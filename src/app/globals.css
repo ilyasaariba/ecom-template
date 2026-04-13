@@ -1064,14 +1064,14 @@ details[open] .faq-question::after {
     text-align: right; /* RTL support */
   }
 
-  /* Swap order for RTL Desktop: text on Right (order: 1), Image on Left (order: 2) */
+  /* Adjust order to flip Image and Text columns */
   .hero-text-block {
-    order: 1;
+    order: 2;
     text-align: right;
   }
   
   .product-image-block {
-    order: 2;
+    order: 1;
   }
 
   .solution-layer .benefits-list {
