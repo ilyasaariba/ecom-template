@@ -50,18 +50,38 @@ export default function GalleryCarousel({ images, productName }: GalleryCarousel
   return (
     <>
       {/* Main viewed image */}
-      <div
-        className="gallery-main-view"
-        onClick={() => setLightboxOpen(true)}
-        title="انقري لتكبير الصورة"
-      >
+      <div className="gallery-main-view">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={images[activeIndex]}
           alt={`${productName} - ${activeIndex + 1}`}
           className="gallery-main-img"
+          onClick={() => setLightboxOpen(true)}
+          title="انقري لتكبير الصورة"
         />
-        <div className="gallery-zoom-hint">
+        
+        {/* Main View Navigation Arrows (Desktop/Mobile) */}
+        {images.length > 1 && activeIndex > 0 && (
+          <button
+            className="gallery-nav-arrow gallery-prev-arrow"
+            onClick={(e) => { e.stopPropagation(); scrollToThumb(activeIndex - 1); }}
+            aria-label="الصورة السابقة"
+          >
+            ‹
+          </button>
+        )}
+        
+        {images.length > 1 && activeIndex < images.length - 1 && (
+          <button
+            className="gallery-nav-arrow gallery-next-arrow"
+            onClick={(e) => { e.stopPropagation(); scrollToThumb(activeIndex + 1); }}
+            aria-label="الصورة التالية"
+          >
+            ›
+          </button>
+        )}
+
+        <div className="gallery-zoom-hint" onClick={() => setLightboxOpen(true)}>
           <span>🔍</span>
         </div>
         {images.length > 1 && (

@@ -36,19 +36,9 @@ export default async function HomePage() {
 
       {/* ═══ HERO SECTION ═══ */}
       <section className="hero">
-        <div className="container">
-
-          {/* Trust Signal */}
-          <div className="trust-signal">
-            <span className="trust-stars">★★★★★</span>
-            <span>تقييم 4.9 من 5 &nbsp;·&nbsp; أكثر من 10,000 زبونة سعيدة</span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="hero-title">{title}</h1>
-          <p className="hero-subtitle">{subtitle}</p>
-
-          {/* === PRODUCT IMAGE BLOCK === */}
+        <div className="container hero-grid">
+          
+          {/* === PRODUCT IMAGE BLOCK (Left/Right side, handled by CSS) === */}
           <div className="product-image-block">
             {/* Main Hero Image */}
             {mainImage && (
@@ -69,40 +59,54 @@ export default async function HomePage() {
             )}
           </div>
 
-          {/* Pricing */}
-          <div className="pricing-container">
-            {oldPrice && oldPrice > price && (
-              <div className="savings-badge">🔥 وفري {oldPrice - price} درهم اليوم فقط</div>
+          {/* === PRODUCT TEXT BLOCK === */}
+          <div className="hero-text-block">
+            {/* Trust Signal */}
+            <div className="trust-signal">
+              <span className="trust-stars">★★★★★</span>
+              <span>تقييم 4.9 من 5 &nbsp;·&nbsp; أكثر من 10,000 زبونة سعيدة</span>
+            </div>
+
+            {/* Headline */}
+            <h1 className="hero-title">{title}</h1>
+            <p className="hero-subtitle">{subtitle}</p>
+
+            {/* Pricing */}
+            <div className="pricing-container">
+              {oldPrice && oldPrice > price && (
+                <div className="savings-badge">🔥 وفري {oldPrice - price} درهم اليوم فقط</div>
+              )}
+              <div className="price-row">
+                <span className="price-new">{price} درهم</span>
+                {oldPrice && <span className="price-old">{oldPrice} درهم</span>}
+              </div>
+            </div>
+
+            {/* Scarcity */}
+            {scarcityText && (
+              <div className="scarcity-block">
+                <span className="pulse-dot"></span>
+                <span className="scarcity-text">{scarcityText}</span>
+              </div>
             )}
-            <div className="price-row">
-              <span className="price-new">{price} درهم</span>
-              {oldPrice && <span className="price-old">{oldPrice} درهم</span>}
+
+            {/* Primary CTA */}
+            <a href="#order" className="btn-primary hero-cta">
+              <span>أطلبي الآن &mdash; الدفع عند الاستلام</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'rotate(180deg)', flexShrink: 0 }}>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+
+            {/* Trust Pills */}
+            <div className="trust-pills">
+              <span className="trust-pill">🚚 توصيل مجاني</span>
+              <span className="trust-pill">🔒 دفع آمن</span>
+              <span className="trust-pill">↩️ استبدال مضمون</span>
             </div>
           </div>
 
-          {/* Scarcity */}
-          {scarcityText && (
-            <div className="scarcity-block">
-              <span className="pulse-dot"></span>
-              <span className="scarcity-text">{scarcityText}</span>
-            </div>
-          )}
-
-          {/* Primary CTA */}
-          <a href="#order" className="btn-primary hero-cta">
-            <span>أطلبي الآن &mdash; الدفع عند الاستلام</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'rotate(180deg)', flexShrink: 0 }}>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
-
-          {/* Trust Pills */}
-          <div className="trust-pills">
-            <span className="trust-pill">🚚 توصيل مجاني</span>
-            <span className="trust-pill">🔒 دفع آمن</span>
-            <span className="trust-pill">↩️ استبدال مضمون</span>
-          </div>
         </div>
       </section>
 

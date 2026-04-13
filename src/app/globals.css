@@ -249,7 +249,39 @@ h1 { /* keep global h1 consistent */
   font-size: 0.85rem;
   backdrop-filter: blur(4px);
   opacity: 0.8;
+  cursor: pointer;
 }
+
+.gallery-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--mocha);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--dur) var(--ease);
+  backdrop-filter: blur(4px);
+  line-height: 1;
+}
+
+.gallery-nav-arrow:hover {
+  background: white;
+  transform: translateY(-50%) scale(1.1);
+  color: var(--primary);
+}
+
+.gallery-prev-arrow { left: 10px; }
+.gallery-next-arrow { right: 10px; }
 
 .gallery-counter {
   position: absolute;
@@ -1001,16 +1033,20 @@ details[open] .faq-question::after {
   .container { max-width: 1060px; }
 
   .hero {
+    padding: 48px 0 40px;
+  }
+
+  .hero-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 48px;
     align-items: start;
-    padding: 48px 0 40px;
+    text-align: right; /* RTL support */
   }
 
-  /* product image block takes the right column */
-  .hero > .container {
-    display: contents; /* Flatten so grid works on children */
+  /* product image block takes the left column (which is visually right in RTL if dir="rtl", or we just let grid handle it) */
+  .hero-text-block {
+    text-align: right;
   }
 
   .solution-layer .benefits-list {
