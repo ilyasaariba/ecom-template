@@ -1057,21 +1057,20 @@ details[open] .faq-question::after {
   }
 
   .hero-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: row-reverse; /* In RTL, row-reverse makes DOM flow Left-to-Right */
     gap: 48px;
-    align-items: start;
-    text-align: right; /* RTL support */
+    align-items: flex-start;
   }
 
-  /* Explicit grid columns: in RTL, column 1 is Right, column 2 is Left */
   .hero-text-block {
-    grid-column: 1;
+    flex: 1; /* takes 50% width */
     text-align: right;
   }
   
   .product-image-block {
-    grid-column: 2;
+    flex: 1; /* takes 50% width */
+    min-width: 0; /* prevents flex overflow */
   }
 
   .solution-layer .benefits-list {
