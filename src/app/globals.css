@@ -162,34 +162,49 @@ h1 { /* keep global h1 consistent */
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PRODUCT IMAGE BLOCK
+   PRODUCT GALLERY (RESPONSIVE)
 ═══════════════════════════════════════════════════════════ */
 .product-image-block {
   margin-bottom: 20px;
 }
 
-.main-image-wrapper {
+/* MOBILE VIEW - Horizontal Scroll */
+.mobile-gallery-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  padding-bottom: 8px;
+}
+
+.mobile-gallery-scroll::-webkit-scrollbar { display: none; }
+
+.mobile-gallery-item {
+  scroll-snap-align: center;
+  flex: 0 0 85%; /* Peek layout: shows part of the next image */
   position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   background: white;
-  aspect-ratio: 4/3;
-  margin-bottom: 12px;
+  aspect-ratio: 4/5;
 }
 
-.main-image {
+.mobile-gallery-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.4s var(--ease);
 }
 
-.main-image-wrapper:hover .main-image {
-  transform: scale(1.03);
+/* DESKTOP VIEW - Hidden by default on mobile */
+.desktop-gallery-interactive {
+  display: none;
 }
 
+/* Gallery Discount Badge */
 .image-discount-badge {
   position: absolute;
   top: 12px;
@@ -201,21 +216,18 @@ h1 { /* keep global h1 consistent */
   padding: 5px 10px;
   border-radius: 50px;
   box-shadow: 0 2px 8px rgba(230,57,70,0.4);
+  z-index: 10;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   GALLERY CAROUSEL — MAIN VIEW & THUMBS
-═══════════════════════════════════════════════════════════ */
-
-/* Main viewed image */
+/* Main viewed image (Desktop) */
 .gallery-main-view {
   position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: white;
+  background: #f7f7f7; /* Solid background for contained images */
   box-shadow: var(--shadow-md);
   cursor: zoom-in;
-  aspect-ratio: 4/3;
+  aspect-ratio: 1/1; /* Balanced height for contain logic */
   margin-bottom: 12px;
   -webkit-tap-highlight-color: transparent;
 }
@@ -223,7 +235,7 @@ h1 { /* keep global h1 consistent */
 .gallery-main-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* Full visibility, no cropping */
   display: block;
   transition: transform 0.35s var(--ease), opacity 0.2s;
   animation: fade-in 0.25s var(--ease);
@@ -1027,6 +1039,14 @@ details[open] .faq-question::after {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   TABLET (768px+)
+═══════════════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+  .mobile-gallery-scroll { display: none !important; }
+  .desktop-gallery-interactive { display: block !important; }
+}
+
+/* ═══════════════════════════════════════════════════════════
    DESKTOP (1024px+)
 ═══════════════════════════════════════════════════════════ */
 @media (min-width: 1024px) {
@@ -1044,9 +1064,14 @@ details[open] .faq-question::after {
     text-align: right; /* RTL support */
   }
 
-  /* product image block takes the left column (which is visually right in RTL if dir="rtl", or we just let grid handle it) */
+  /* Swap order for RTL Desktop: text on Right (order: 1), Image on Left (order: 2) */
   .hero-text-block {
+    order: 1;
     text-align: right;
+  }
+  
+  .product-image-block {
+    order: 2;
   }
 
   .solution-layer .benefits-list {

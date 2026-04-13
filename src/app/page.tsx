@@ -40,23 +40,7 @@ export default async function HomePage() {
           
           {/* === PRODUCT IMAGE BLOCK (Left/Right side, handled by CSS) === */}
           <div className="product-image-block">
-            {/* Main Hero Image */}
-            {mainImage && (
-              <div className="main-image-wrapper">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={mainImage} className="main-image" alt={title} />
-                {oldPrice && oldPrice > price && (
-                  <div className="image-discount-badge">
-                    -{Math.round(((oldPrice - price) / oldPrice) * 100)}%
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Gallery Carousel */}
-            {galleryImages.length > 0 && (
-              <GalleryCarousel images={galleryImages} productName={title} />
-            )}
+            <GalleryCarousel images={[mainImage, ...galleryImages].filter(Boolean)} productName={title} discountPct={oldPrice && oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : undefined} />
           </div>
 
           {/* === PRODUCT TEXT BLOCK === */}
